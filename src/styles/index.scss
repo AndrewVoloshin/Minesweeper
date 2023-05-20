@@ -38,7 +38,7 @@
    display: flex;
 }
 
-.cell__quest {
+.quest {
   width: 100%;
   height: 100%;
   // display: flex;
@@ -47,11 +47,11 @@
   align-items: center;
   background-color: rgba(67, 6, 235, 0.5)
 }
-.cell__quest-act {
+.quest-act {
   display: flex;
 }
 
-.cell__mine {
+.maybe-mine {
   width: 100%;
   height: 100%;
   // display: flex;
@@ -62,7 +62,7 @@
 
 }
 
-.cell__mine-act{
+.maybe-mine-act{
   display: flex;
 }
 

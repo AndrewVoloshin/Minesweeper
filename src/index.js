@@ -12,9 +12,9 @@ document.querySelector(".modal-window__text").innerHTML = "GAME OVER";
 for (let i = 0; i < 100; i++) {
   const cell = createElement("div", "cell", "app-field");
   createElement("span", "cell__cont", "", cell);
-  const cellMine = createElement("span", "cell__mine", "", cell);
+  const cellMine = createElement("span", "maybe-mine", "", cell);
   cellMine.innerHTML = "m";
-  const cellQeust = createElement("span", "cell__quest", "", cell);
+  const cellQeust = createElement("span", "quest", "", cell);
   cellQeust.innerHTML = "?";
   cell.classList.add(`cell-${i}`);
   cell.setAttribute("data-info", i);
@@ -94,15 +94,15 @@ document.addEventListener("contextmenu", function (event) {
   console.log(event.target,'target');
 
   if (event.target.classList.contains("cell")) {
-    event.target.querySelector(".cell__mine").classList.add("cell__mine-act");
+    event.target.querySelector(".maybe-mine").classList.add("maybe-mine-act");
   }
-  if (event.target.classList.contains("cell__mine-act")) {
-    event.target.classList.remove("cell__mine-act");
+  if (event.target.classList.contains("maybe-mine-act")) {
+    event.target.classList.remove("maybe-mine-act");
     event.target.parentNode
-      .querySelector(".cell__quest")
-      .classList.add("cell__quest-act");
+      .querySelector(".quest")
+      .classList.add("quest-act");
   }
-  if(event.target.classList.contains("cell__quest-act")){
-    event.target.classList.remove("cell__quest-act")
+  if(event.target.classList.contains("quest-act")){
+    event.target.classList.remove("quest-act")
   }
 });
