@@ -1,22 +1,35 @@
 import "./styles/index.scss";
+import { createElement } from "./util";
 
-createElement("div", "container");
+const appField = createElement("div", "app-field");
 
-function createElement(elem, className, parentNode = "app") {
-  const element = document.createElement(elem);
-  element.classList.add(className);
-  document.querySelector(`.${parentNode}`).appendChild(element);
-  return element;
-}
+createElement("div", "modal", "app");
+createElement("div", "overlay", "modal");
+createElement("div", "modal-window", "modal");
+createElement("p", "modal-window__text", "modal-window");
+document.querySelector(".modal-window__text").innerHTML = "GAME OVER";
 
 for (let i = 0; i < 100; i++) {
-  const element = createElement("div", "cell", "container");
-  element.classList.add(`cell-${i}`);
-  element.setAttribute("data-info", i);
-  element.addEventListener("click", (event) => {
-    console.log(event.target);
-  });
+  const cell = createElement("div", "cell", "app-field");
+  createElement("span", "cell__cont", "", cell);
+  const cellMine = createElement("span", "cell__mine", "", cell);
+  cellMine.innerHTML = "m";
+  const cellQeust = createElement("span", "cell__quest", "", cell);
+  cellQeust.innerHTML = "?";
+  cell.classList.add(`cell-${i}`);
+  cell.setAttribute("data-info", i);
 }
+
+appField.addEventListener("click", (event) => {
+  // console.log(event.target);
+  if (!event.target.classList.contains("cell")) return;
+  if (event.target.querySelector(".cell__cont").classList.contains("mine")) {
+    // document.querySelector(".modal").style.display = "flex";
+    console.log("Mine. Game over");
+  }
+  event.target.querySelector(".cell__cont").classList.add("cell__cont-act");
+});
+
 const minesPosition = [];
 
 fillMines();
@@ -25,15 +38,14 @@ function fillMines() {
   for (let i = 0; i < 10; i++) {
     let randomNum = Math.floor(Math.random() * 100);
     minesPosition.push(randomNum);
-    document.querySelectorAll(".cell")[randomNum].classList.add("mine");
+    document.querySelectorAll(".cell__cont")[randomNum].classList.add("mine");
   }
 }
-addCellNumbers();
 
-function addCellNumbers() {
-  console.log(minesPosition);
+addCellNumMinesAround();
+
+function addCellNumMinesAround() {
   for (let i = 0; i < 100; i++) {
-    let mines = 0;
     const cell = document.querySelectorAll(".cell")[i];
     const cellNumber = +cell.dataset.info;
     if (minesPosition.includes(cellNumber)) continue;
@@ -62,13 +74,35 @@ function addCellNumbers() {
   }
 }
 
-function checkMinesAround(cell, cellNumber, minesAround) {
+function checkMinesAround(cell, cellNumber, cellsCheckMines) {
   let localMines = 0;
-  minesAround.forEach((mineAround) => {
-    minesPosition.includes(cellNumber + mineAround) ? localMines++ : localMines;
+  cellsCheckMines.forEach((cellCheckMines) => {
+    minesPosition.includes(cellNumber + cellCheckMines)
+      ? localMines++
+      : localMines;
   });
   setNumberMines(cell, localMines);
 }
 function setNumberMines(cell, localMines) {
-  if (localMines > 0) cell.innerHTML = localMines;
+  if (localMines > 0) {
+    cell.querySelector(".cell__cont").innerHTML = localMines;
+  }
 }
+
+document.addEventListener("contextmenu", function (event) {
+  event.preventDefault();
+  console.log(event.target,'target');
+
+  if (event.target.classList.contains("cell")) {
+    event.target.querySelector(".cell__mine").classList.add("cell__mine-act");
+  }
+  if (event.target.classList.contains("cell__mine-act")) {
+    event.target.classList.remove("cell__mine-act");
+    event.target.parentNode
+      .querySelector(".cell__quest")
+      .classList.add("cell__quest-act");
+  }
+  if(event.target.classList.contains("cell__quest-act")){
+    event.target.classList.remove("cell__quest-act")
+  }
+});
